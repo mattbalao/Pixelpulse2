@@ -1,19 +1,30 @@
 os: Windows Server 2012 R2
 
-platform:
- - x86
+environment:
+  matrix:
+    - build_platform: x86
+      MINGW_ARCHIVE: i686-5.3.0-release-posix-dwarf-rt_v4-rev0.7z
+      MINGW_DIR: mingw32
+      LIBUSB_ARCHIVE: libusb-1.0-win-hp-i686.7z
+      OPENSSL_INSTALLER: Win32OpenSSL_Light-1_0_2e.exe
+
+    - build_platform: x64
+      MINGW_ARCHIVE: x86_64-5.3.0-release-posix-seh-rt_v4-rev0.7z
+      MINGW_DIR: mingw64
+      LIBUSB_ARCHIVE: libusb-1.0-win-hp-x86_64.7z
+      OPENSSL_INSTALLER: Win64OpenSSL_Light-1_0_2e.exe
 
 install:
-  - ps: (new-object System.Net.WebClient).Downloadfile("http://iweb.dl.sourceforge.net/project/mingw-w64/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/5.2.0/threads-posix/dwarf/i686-5.2.0-release-posix-dwarf-rt_v4-rev0.7z", "c:\mingw.7z")
+  - ps: (new-object System.Net.WebClient).Downloadfile("http://downloads.sourceforge.net/mingw-w64/$env:MINGW_ARCHIVE", "c:\mingw.7z")
   - 7z x -y "c:\mingw.7z" -o"C:\" > nul
-  - ps: (new-object System.Net.WebClient).Downloadfile("http://sourceforge.net/projects/mingw-w64/files/External%20binary%20packages%20%28Win64%20hosted%29/MSYS%20%2832-bit%29/MSYS-20111123.zip", "c:\msys.zip")
+  - ps: (new-object System.Net.WebClient).Downloadfile("http://sourceforge.net/projects/mingw-w64/MSYS-20111123.zip", "c:\msys.zip")
   - 7z x -y "c:\msys.zip" -o"C:\" > nul
-  - set QTDIR=C:\Qt\5.4\mingw491_32
-  - set PATH=C:\Program Files (x86)\MSBuild\12.0\bin\;C:\mingw32\bin;C:\msys\bin\;%QTDIR%\bin;%PATH%
-  - ps: (new-object System.Net.WebClient).Downloadfile("http://itdaniher.com/static/libusb-1.0-hp.7z", "c:\libusb.7z")
+  - set QTDIR=C:\Qt\5.5\mingw492_32
+  - set PATH=C:\Program Files (x86)\MSBuild\12.0\bin\;C:\%MINGW_DIR%\bin;C:\msys\bin\;%QTDIR%\bin;%PATH%
+  - ps: (new-object System.Net.WebClient).Downloadfile("http://swdownloads.analog.com/cse/m1k/$env:LIBUSB_ARCHIVE", "c:\libusb.7z")
   - 7z x -y "c:\libusb.7z" -o"C:\libusb" > nul
-  - appveyor DownloadFile https://slproweb.com/download/Win32OpenSSL_Light-1_0_2e.exe
-  - Win32OpenSSL_Light-1_0_2e.exe /silent /verysilent /sp- /suppressmsgboxes
+  - appveyor DownloadFile https://slproweb.com/download/%OPENSSL_INSTALLER%
+  - %OPENSSL_INSTALLER% /silent /verysilent /sp- /suppressmsgboxes
 
 build_script:
   - git submodule update --init --recursive

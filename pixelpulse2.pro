@@ -81,6 +81,7 @@ osx {
 win32 {
 	RC_ICONS = icons/pp2.ico
 	LIBS += "C:\libusb\libusb-1.0.a"
+	LIBS += -lglut32 -lglu32 -lopengl32
 	INCLUDEPATH += "C:\libusb\include"
 	contains(QT_ARCH, x86_64) {
 		INCLUDEPATH += "C:\mingw64\include"

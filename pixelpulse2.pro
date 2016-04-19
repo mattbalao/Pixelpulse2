@@ -3,22 +3,45 @@ TEMPLATE = app
 QT += qml quick widgets
 QT += network
 CONFIG += c++11
+
 CONFIG += declarative_debug
 CONFIG += qml_debug
-#win32 {
-#        CONFIG += release
-#}
-#unix {
-#        CONFIG += release
-#}
+
+isEmpty(LIBUSB_LIBRARY) {
+  LIBUSB_LIBRARY = "C:\Users\cpop\Downloads\libsmu\libsmu-0.9.0-g5cf7ec8\libsmu\64\libusb-1.0.lib"
+}
+
+isEmpty(LIBUSB_INCLUDE_PATH) {
+  LIBUSB_INCLUDE_PATH = "C:\Users\cpop\Downloads\libsmu-0.9.0-g5cf7ec8\libsmu\include\libsmu"
+}
+
+equals(TEMPLATE, "app") {
+  DEFINES += GIT_VERSION='"\\\"$${system(git -C $$PWD describe --always --tags --abbrev)}\\\""'
+  DEFINES += BUILD_DATE='"\\\"$${system(date /t +%F)}\\\""'
+}
+
+equals(TEMPLATE, "vcapp") {
+  DEFINES += GIT_VERSION='"$${system(git -C $$PWD describe --always --tags --abbrev)}"'
+  DEFINES += BUILD_DATE='"$${system(date /t +%F)}"'
+
+  # It is needed to remove the GIT_VERSION and BUILD_DATE defines from the RC preprocessor macros,
+  # otherwise the RC compiler will fail.
+  RC_DEFINES += DEFINES
+  RC_DEFINES -= GIT_VERSION
+  RC_DEFINES -= BUILD_DATE
+}
+
+win32 {
+        CONFIG += release
+}
+unix {
+        CONFIG += release
+}
 
 QMAKE_CFLAGS_DEBUG += -ggdb
 QMAKE_CXXFLAGS_DEBUG += -ggdb
 
 CFLAGS += -v -static -static-libgcc -static-libstdc++ -g
-
-DEFINES += GIT_VERSION='"\\\"$(shell git -C $$PWD describe --always --tags --abbrev)\\\""'
-DEFINES += BUILD_DATE='"\\\"$(shell date +%F)\\\""'
 
 SOURCES += main.cpp \
     SMU.cpp \
@@ -73,9 +96,8 @@ osx {
 
 win32 {
 	RC_ICONS = icons/pp2.ico
-	LIBS += "C:\libusb\MinGW32\static\libusb-1.0.a"
-	INCLUDEPATH += "C:\libusb\include\libusb-1.0"
-	INCLUDEPATH += "C:\mingw32\include"
+	LIBS += $${LIBUSB_LIBRARY}
+	INCLUDEPATH += $${LIBUSB_INCLUDE_PATH}
 }
 
 unix {

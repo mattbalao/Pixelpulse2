@@ -49,8 +49,6 @@ unix {
 QMAKE_CFLAGS_DEBUG += -ggdb
 QMAKE_CXXFLAGS_DEBUG += -ggdb
 
-CFLAGS += -v -static -static-libgcc -static-libstdc++ -g
-
 SOURCES += main.cpp \
     SMU.cpp \
     Plot/PhosphorRender.cpp \

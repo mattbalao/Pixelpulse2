@@ -23,21 +23,8 @@ isEmpty(LIBSMU_INCLUDE_PATH) {
   LIBSMU_INCLUDE_PATH = "C:\Users\cpop\Downloads\libsmu-0.9.0-g5cf7ec8\libsmu\include"
 }
 
-equals(TEMPLATE, "app") {
-  DEFINES += GIT_VERSION='"\\\"$${system(git -C $$PWD describe --always --tags --abbrev)}\\\""'
-  DEFINES += BUILD_DATE='"\\\"$${system(date +%F)}\\\""'
-}
-
-equals(TEMPLATE, "vcapp") {
-  DEFINES += GIT_VERSION='"$${system(git -C $$PWD describe --always --tags --abbrev)}"'
-  DEFINES += BUILD_DATE='"$${system(date +%F)}"'
-
-  # It is needed to remove the GIT_VERSION and BUILD_DATE defines from the RC preprocessor macros,
-  # otherwise the RC compiler will fail.
-  RC_DEFINES += DEFINES
-  RC_DEFINES -= GIT_VERSION
-  RC_DEFINES -= BUILD_DATE
-}
+DEFINES += GIT_VERSION=$${system(git -C $$PWD describe --always --tags --abbrev)}
+DEFINES += BUILD_DATE=$${system(date +%F)}
 
 QMAKE_CFLAGS_DEBUG += -ggdb
 QMAKE_CXXFLAGS_DEBUG += -ggdb

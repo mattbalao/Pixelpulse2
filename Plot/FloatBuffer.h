@@ -51,14 +51,18 @@ public:
     {
         size_t free_buffer_space = m_data.size() - m_start_test;
         int num_samples_to_add = std::min(samples.size(), free_buffer_space);
+        //qDebug()<<"Num samples to add"<<num_samples_to_add<<"NO items"<<m_data.size()<<endl;
 
         for (int i = 0; i < num_samples_to_add; i++) {
             m_data[(m_start_test +  i) % m_data.size()] = samples[i][signal_index];
         }
         m_start_test += num_samples_to_add;
+//        if(m_start_test >= 95000)
+//            qDebug()<<"start: "<<m_start_test<<endl;
         if (m_length < m_start_test)
             m_length = m_start_test;
 
+        qDebug() << "BufferSize:"<<m_data.size();
         emit dataChanged();
     }
 
@@ -81,9 +85,26 @@ public:
         unsigned i_min = timeToIndex(start);
         unsigned i_max = timeToIndex(end);
 
-        for (unsigned i=i_min, j=0; i<i_max && j<n_verticies; i++, j++) {
-            vertices[j].set(indexToTime(i), m_data[wrapIndex(i)]);
+        const unsigned diff = i_max - i_min;
+        //qDebug()<<"From Index "<<i_min<<" to index "<<i_max<<"with "<<n_verticies<<"\n";
+        //qDebug()<<"diff="<<diff<<"\n";
+        if(diff <= n_verticies){
+
+            for (unsigned i=i_min, j=0; i<i_max && j<n_verticies; i++, j++) {
+                vertices[j].set(indexToTime(i), m_data[wrapIndex(i)]);
+            }
         }
+        else{
+            double inc = i_min;
+            double incValue = (double)diff / n_verticies;
+            //qDebug()<<"diff:"<<diff<<";incValue:"<<incValue;
+            for (unsigned i=i_min, j=0; i<i_max && j<n_verticies;j++) {
+                vertices[j].set(indexToTime(i), m_data[wrapIndex(i)]);
+                inc += incValue;
+                i = (unsigned)inc;
+            }
+        }
+
     }
 
     void setRate(float secondsPerSample) {

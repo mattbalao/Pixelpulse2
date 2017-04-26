@@ -3,7 +3,8 @@ TEMPLATE = app
 QT += qml quick widgets
 QT += network
 CONFIG += c++11
-
+CONFIG += declarative_debug
+CONFIG += qml_debug
 #win32 {
 #        CONFIG += release
 #}

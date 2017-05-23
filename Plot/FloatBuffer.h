@@ -62,7 +62,7 @@ public:
         if (m_length < m_start_test)
             m_length = m_start_test;
 
-        qDebug() << "BufferSize:"<<m_data.size();
+        //qDebug() << "BufferSize:"<<m_data.size();
         emit dataChanged();
     }
 

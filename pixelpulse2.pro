@@ -15,6 +15,14 @@ isEmpty(LIBUSB_INCLUDE_PATH) {
   LIBUSB_INCLUDE_PATH = "C:\Users\cpop\Downloads\libsmu-0.9.0-g5cf7ec8\libsmu\include\libsmu"
 }
 
+isEmpty(LIBSMU_LIBRARY) {
+  LIBSMU_LIBRARY = "C:\Users\cpop\Downloads\libsmu\libsmu-0.9.0-g5cf7ec8\libsmu\64\libsmu.lib"
+}
+
+isEmpty(LIBSMU_INCLUDE_PATH) {
+  LIBSMU_INCLUDE_PATH = "C:\Users\cpop\Downloads\libsmu-0.9.0-g5cf7ec8\libsmu\include"
+}
+
 equals(TEMPLATE, "app") {
   DEFINES += GIT_VERSION='"\\\"$${system(git -C $$PWD describe --always --tags --abbrev)}\\\""'
   DEFINES += BUILD_DATE='"\\\"$${system(date /t +%F)}\\\""'
@@ -98,6 +106,9 @@ win32 {
 	RC_ICONS = icons/pp2.ico
 	LIBS += $${LIBUSB_LIBRARY}
 	INCLUDEPATH += $${LIBUSB_INCLUDE_PATH}
+
+        LIBS += $${LIBSMU_LIBRARY}
+        INCLUDEPATH += $${LIBSMU_INCLUDE_PATH}
 }
 
 unix {

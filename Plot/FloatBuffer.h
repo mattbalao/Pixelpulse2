@@ -5,6 +5,7 @@
 #include <math.h>
 #include <QtQuick/qsgnode.h>
 #include <iostream>
+#include <array>
 using namespace std;
 class FloatBuffer : public QObject
 {
@@ -50,7 +51,7 @@ public:
     void append_samples(const std::vector<std::array<float, 4>>& samples, int signal_index)
     {
         size_t free_buffer_space = m_data.size() - m_start_test;
-        int num_samples_to_add = std::min(samples.size(), free_buffer_space);
+        int num_samples_to_add = min(samples.size(), free_buffer_space);
         //qDebug()<<"Num samples to add"<<num_samples_to_add<<"NO items"<<m_data.size()<<endl;
 
         for (int i = 0; i < num_samples_to_add; i++) {

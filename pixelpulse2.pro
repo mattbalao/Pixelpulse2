@@ -35,9 +35,6 @@ isEmpty(GIT_VERSION) {
 
 DEFINES += BUILD_DATE=$${BUILD_DATE} GIT_VERSION=$${GIT_VERSION}
 
-QMAKE_CFLAGS_DEBUG += -ggdb
-QMAKE_CXXFLAGS_DEBUG += -ggdb
-
 SOURCES += main.cpp \
     SMU.cpp \
     Plot/PhosphorRender.cpp \

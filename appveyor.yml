@@ -1,8 +1,10 @@
 os: Visual Studio 2015
 
 install:
-  # update libsmu submodule
-  - git submodule update --init --recursive
+  # download libsmu
+  - ps: $libsmu = 'https://ci.appveyor.com/api/buildjobs/6bf65yqjhofkcfpl/artifacts/libsmu-0.9.0-g5cf7ec8.zip'
+  - ps: Start-FileDownload $libsmu -FileName libsmu-rework.zip
+  - 7z x libsmu-rework.zip -oc:\libsmu
 
   # libusb patched for windows hotplug support
   - git clone https://github.com/analogdevicesinc/libusb.git "C:\libusb"
@@ -20,12 +22,12 @@ build_script:
 
   - mkdir c:\projects\pixelpulse2\32
   - cd c:\projects\pixelpulse2\32
-  - C:\Qt\5.6\msvc2015\bin\qmake "CONFIG+=release" "BUILD_DATE=%Pixelpulse2BuildDate%" "GIT_VERSION=%Pixelpulse2GitCommit%" -spec win32-msvc2015 -tp vc "LIBUSB_LIBRARY = C:\libusb\Win32\Release\dll\libusb-1.0.lib" "LIBUSB_INCLUDE_PATH = C:\libusb\libusb" ..\pixelpulse2.pro
+  - C:\Qt\5.6\msvc2015\bin\qmake "CONFIG+=release" "BUILD_DATE=%Pixelpulse2BuildDate%" "GIT_VERSION=%Pixelpulse2GitCommit%" -spec win32-msvc2015 -tp vc "LIBSMU_LIBRARY = C:\libsmu\libsmu\32\libsmu.lib" "LIBSMU_INCLUDE_PATH = C:\libsmu\libsmu\include" "LIBUSB_LIBRARY = C:\libusb\Win32\Release\dll\libusb-1.0.lib" "LIBUSB_INCLUDE_PATH = C:\libusb\libusb" ..\pixelpulse2.pro
   - msbuild pixelpulse2.vcxproj /p:Platform=Win32 /p:Configuration=Release
 
   - mkdir c:\projects\pixelpulse2\64
   - cd c:\projects\pixelpulse2\64
-  - C:\Qt\5.6\msvc2015_64\bin\qmake "CONFIG+=release" "BUILD_DATE=%Pixelpulse2BuildDate%" "GIT_VERSION=%Pixelpulse2GitCommit%" -spec win32-msvc2015 -tp vc "LIBUSB_LIBRARY = C:\libusb\x64\Release\dll\libusb-1.0.lib" "LIBUSB_INCLUDE_PATH = C:\libusb\libusb" ..\pixelpulse2.pro
+  - C:\Qt\5.6\msvc2015_64\bin\qmake "CONFIG+=release" "BUILD_DATE=%Pixelpulse2BuildDate%" "GIT_VERSION=%Pixelpulse2GitCommit%" -spec win32-msvc2015 -tp vc "LIBSMU_LIBRARY = C:\libsmu\libsmu\64\libsmu.lib" "LIBSMU_INCLUDE_PATH = C:\libsmu\libsmu\include" "LIBUSB_LIBRARY = C:\libusb\x64\Release\dll\libusb-1.0.lib" "LIBUSB_INCLUDE_PATH = C:\libusb\libusb" ..\pixelpulse2.pro
   - msbuild pixelpulse2.vcxproj /p:Platform=x64 /p:Configuration=Release
 
 after_build:
@@ -37,6 +39,7 @@ after_build:
     cp C:\OpenSSL-Win32\ssleay32.dll distrib
     cp C:\OpenSSL-Win32\bin\msvcr120.dll distrib
     cp C:\libusb\Win32\Release\dll\libusb-1.0.dll distrib
+    cp C:\libsmu\libsmu\32\libsmu.dll distrib
     7z a -y pixelpulse2_exe_r_32.zip pixelpulse2.exe
     7z a -y distrib_r_32.zip distrib
 
@@ -50,6 +53,7 @@ after_build:
     cp C:\OpenSSL-Win64\ssleay32.dll distrib
     cp C:\OpenSSL-Win64\bin\msvcr120.dll distrib
     cp C:\libusb\x64\Release\dll\libusb-1.0.dll distrib
+    cp C:\libsmu\libsmu\64\libsmu.dll distrib
     7z a -y pixelpulse2_exe_r_64.zip pixelpulse2.exe
     7z a -y distrib_r_64.zip distrib
 

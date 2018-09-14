@@ -1,6 +1,8 @@
 import QtQuick 2.1
 import QtQuick.Layouts 1.0
 import QtQml.Models 2.1
+import QtQuick.Dialogs 1.0
+import QtQuick.Dialogs 1.2
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 import "jsutils.js" as JSUtils
@@ -154,6 +156,29 @@ ColumnLayout {
     Layout.minimumWidth: parent.Layout.minimumWidth
     Layout.maximumWidth: parent.Layout.maximumWidth
     height: toolbarHeight
+  }
+
+  FileDialog {
+    id: chooseFwDialog
+    selectExisting: true
+    title: "Please select a valid firmware file."
+    nameFilters: [ "M1K firmware files (*.bin)", "All files (*)" ]
+    onAccepted: {
+        var ret;
+        session.closeAllDevices();
+        devicesModel.clear();
+        justUpdated = true;
+        updateNeeded = false;
+        logOutput.clearLog();
+        session.openAllDevices();
+        ret = session.flash_firmware(fileio.getFilePath(chooseFwDialog.fileUrls[0]));
+
+        if (ret.length === 0) {
+            logOutput.appendMessage("All devices were succesfully updated. Disconnect devices");
+        } else {
+            logOutput.appendMessage(ret);
+        }
+    }
   }
 
   Rectangle {
@@ -400,6 +425,7 @@ ColumnLayout {
             devicesModel.clear();
             justUpdated = true;
             updateNeeded = false;
+            session.openAllDevices();
             ret = session.flash_firmware(firmwareFilePath);
 
             if (ret.length === 0) {
@@ -415,7 +441,51 @@ ColumnLayout {
     }
   }
 
+  Rectangle {
+    id: flashFwBrowseBtn
+    anchors { left: parent.left;
+              bottom: logOutput.top;
+              bottomMargin: 5;
+              leftMargin: 5 }
+    height: 25
+    width: 140
+    radius: 4
+    color: 'grey'
 
+    Rectangle {
+      anchors.horizontalCenter: parent.horizontalCenter
+      anchors.verticalCenter: parent.verticalCenter
+      width: parent.width - 2
+      height: parent.height - 2
+      radius: 4
+      gradient: Gradient {
+        GradientStop { position: 0.0; color: '#565666' }
+        GradientStop { position: 0.15; color: '#6a6a7d' }
+        GradientStop { position: 0.5; color: '#5a5a6a' }
+        GradientStop { position: 1.0; color: '#585868' }
+      }
+
+      Text {
+        x: 5
+        text: "Choose firmware file"
+        font.pointSize: 10
+        color: 'white'
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter: parent.horizontalCenter
+      }
+
+      MouseArea {
+        hoverEnabled: true
+        anchors.fill: parent
+        onClicked: {
+          chooseFwDialog.visible = true
+        }
+
+        onPressed: flashFwBrowseBtn.color = 'black'
+        onReleased: flashFwBrowseBtn.color = 'grey'
+      }
+    }
+  }
   Rectangle {
     id: logCleanBtn
     anchors { right: parent.right;

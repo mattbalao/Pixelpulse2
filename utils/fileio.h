@@ -59,6 +59,10 @@ public slots:
         return in.readAll();
 	}
 
+    QString getFilePath(const QUrl& source) {
+        return source.toLocalFile();
+    }
+
 public:
     FileIO() {}
 };

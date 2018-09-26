@@ -38,7 +38,8 @@ m_active(false),
 m_continuous(false),
 m_sample_rate(0),
 m_sample_count(0),
-m_queue_size(1000000)
+m_queue_size(1000000),
+m_firmware_fd(NULL)
 {
     connect(this, &SessionItem::finished, this, &SessionItem::onFinished, Qt::QueuedConnection);
     connect(this, &SessionItem::attached, this, &SessionItem::onAttached, Qt::QueuedConnection);
@@ -61,8 +62,10 @@ m_queue_size(1000000)
 
 SessionItem::~SessionItem() {
         Q_ASSERT(m_devices.size() == 0);
-        delete m_firmware_fd;
-        m_firmware_fd = NULL;
+	if (m_firmware_fd) {
+		delete m_firmware_fd;
+		m_firmware_fd = NULL;
+	}
 }
 
 

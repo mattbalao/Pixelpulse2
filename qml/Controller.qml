@@ -88,13 +88,13 @@ Item {
 //    onTriggered: session.updateMeasurements()
 //  }
 
-//  Timer {
-//    id: updateLabelsTimer
-//    interval: 500
-//    repeat: true
-//    running: enabled
-//    onTriggered: session.updateAllMeasurements()
-//  }
+  Timer {
+    id: updateLabelsTimer
+    interval: 500
+    repeat: true
+    running: enabled
+    onTriggered: session.updateAllMeasurements()
+  }
 
   onContinuousChanged: {
     // Restart the session so the new sampling mode takes effect

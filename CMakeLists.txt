@@ -133,6 +133,7 @@ include_directories(
 	${Qt5Quick_INCLUDE_DIRS}
 	${Qt5Qml_INCLUDE_DIRS}
 	${Qt5Network_INCLUDE_DIRS}
+	${Qt5Concurrent_INCLUDE_DIRS}
 	${CMAKE_SOURCE_DIR}/Plot
 	${CMAKE_SOURCE_DIR}/utils
 	${CMAKE_SOURCE_DIR}
@@ -214,6 +215,7 @@ target_link_libraries(${PROJECT_NAME} LINK_PRIVATE
 		${Qt5Quick_LIBRARIES}
 		${Qt5Qml_LIBRARIES}
 		${Qt5Network_LIBRARIES}
+		${Qt5Concurrent_LIBRARIES}
 )
 
 

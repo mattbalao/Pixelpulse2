@@ -82,7 +82,6 @@ find_path(LIBSMU_INCLUDE_DIRS libsmu/libsmu.hpp)
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -std=c++11")
 endif()
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG_BUILD")
 
 # don't complain about extra format args for g++
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -183,7 +182,6 @@ add_executable(${PROJECT_NAME} WIN32 ${OSX_BUNDLE}
 		${SRC_LIST}
 		${pixelpulse_RESOURCES}
 		${RESOURCES}
-#		${QML_SRC}
 )
 
 if (NOT ENABLE_APPLICATION_BUNDLE)
